@@ -1,20 +1,20 @@
 - name: Create Node Exporter user group
-  group: name="{{ groupID}} "
+  group: name="{{ groupID }}"
   become: true
 
 - name: Create Node Exporter user
   user:
-    name: "{{ userID}} "
-    group: "{{ groupID}} "
+    name: "{{ userID }}"
+    group: "{{ groupID }}"
     system: yes
     shell: "/sbin/nologin"
-    comment: "{{ userID}}  nologin user"
+    comment: "{{ userID }}  nologin user"
     createhome: "no"
     state: present
 
 - name: Install Node Exporter
   unarchive:
-    src: " https://github.com/prometheus/node_exporter/releases/download/{{ version }}/node_exporter-{{ version }}.linux-amd64.tar.gz"
+    src: "https://github.com/prometheus/node_exporter/releases/download/v{{version}}/node_exporter-{{version}}.linux-amd64.tar.gz"
     dest: /tmp
     remote_src: yes
 
@@ -22,8 +22,8 @@
   copy:
     src: "/tmp/node_exporter-{{ version }}.linux-amd64/node_exporter"
     dest: "/usr/local/bin/node_exporter"
-    owner: "{{ userID}} "
-    group: "{{ groupID}} "
+    owner: "{{ userID }}"
+    group: "{{ groupID }}"
     remote_src: yes
     mode: 0755
 

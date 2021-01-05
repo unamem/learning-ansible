@@ -3,12 +3,12 @@
 # Playbook to install node-exporter and run cadvisor docker
 #
 
-- hosts: miami
-  remote_user: hem
+- hosts: instances
+  remote_user: ec2-user
   become: yes
   become_method: sudo
   become_user: root
   roles:
-    - { role: update }
+    #- { role: update }
     - { role: node_exporter }
     #  - { role: cadvisor }
