@@ -1,0 +1,50 @@
+- name: Create Node Exporter user group
+  group: name="{{ groupID}} "
+  become: true
+
+- name: Create Node Exporter user
+  user:
+    name: "{{ userID}} "
+    group: "{{ groupID}} "
+    system: yes
+    shell: "/sbin/nologin"
+    comment: "{{ userID}}  nologin user"
+    createhome: "no"
+    state: present
+
+- name: Install Node Exporter
+  unarchive:
+    src: " https://github.com/prometheus/node_exporter/releases/download/{{ version }}/node_exporter-{{ version }}.linux-amd64.tar.gz"
+    dest: /tmp
+    remote_src: yes
+
+- name: Copy node exporter files to bin and change ownership of copied file
+  copy:
+    src: "/tmp/node_exporter-{{ version }}.linux-amd64/node_exporter"
+    dest: "/usr/local/bin/node_exporter"
+    owner: "{{ userID}} "
+    group: "{{ groupID}} "
+    remote_src: yes
+    mode: 0755
+
+- name: Delete node exporter tmp folder
+  file:
+    path: '/tmp/node_exporter-{{ version}} -linux-amd64'
+    state: absent
+
+- name: Copy System Service Daemon File
+  template:
+    src: node_exporter.init.j2
+    dest: /etc/systemd/system/node_exporter.service
+
+- name: Start Node Exporter Service
+  service:
+    name: "{{ serviceName }}"
+    state: started
+    enabled: yes
+
+- name: Check if the node exporter emits necessary metrics
+  uri:
+    url: "{{ url }}/metrics"
+    method: GET
+    status_code: 200

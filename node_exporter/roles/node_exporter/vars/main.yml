@@ -1,0 +1,8 @@
+---
+
+serviceName: "node_exporter"
+userID: "node_exporter"
+groupID: "node_exporter"
+exec_command: /usr/local/bin/node_exporter
+version: 0.16.0
+url: "http://127.0.0.1:9100"
