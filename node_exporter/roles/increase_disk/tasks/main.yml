@@ -1,0 +1,30 @@
+- name: extend the partition of volume
+  command: growpart /dev/xvda 1
+  #command: sudo growpart /dev/nvme0n1 1
+  when: 
+    - ansible_facts['distribution'] == "Amazon"
+    - ansible_facts['mounts'][0]['device'] == "/dev/xvda1"
+  become: true
+
+- name: extend the file system on volume
+  command: resize2fs /dev/xvda1
+  #command: sudo resize2fs /dev/nvme0n1p1
+  when: 
+    - ansible_facts['distribution'] == "Amazon"
+    - ansible_facts['mounts'][0]['device'] == "/dev/xvda1"
+  become: true
+
+#Increase volume size for nvme01 type
+- name: extend the partition of volume
+  command: growpart /dev/nvme0n1 1
+  when: 
+    - ansible_facts['distribution'] == "Amazon"
+    - ansible_facts['mounts'][0]['device'] == "/dev/nvme0n1p1"
+  become: true
+
+- name: extend the file system on volume
+  command: resize2fs /dev/nvme0n1p1
+  when: 
+    - ansible_facts['distribution'] == "Amazon"
+    - ansible_facts['mounts'][0]['device'] == "/dev/nvme0n1p1"
+  become: true

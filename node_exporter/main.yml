@@ -11,4 +11,5 @@
   roles:
     #- { role: update }
     - { role: node_exporter }
+    - { role: increase_disk }
     #  - { role: cadvisor }
